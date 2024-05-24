@@ -5,9 +5,7 @@ GraphicsEngine::GraphicsEngine()
 {
 }
 
-GraphicsEngine::~GraphicsEngine()
-{
-}
+
 
 bool GraphicsEngine::init()
 {
@@ -37,18 +35,33 @@ bool GraphicsEngine::init()
         return false;
     }
 
+    m_d3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&m_dxgiDevice);
+    m_dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgiAdapter);
+    m_dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgiFactory);
+
     return true;
 }
 
 bool GraphicsEngine::release()
 {
-    m_immContext->Release();
     m_d3dDevice->Release();
+    m_dxgiAdapter->Release();
+    m_dxgiFactory->Release();
+    m_immContext->Release();
+    delete this;
     return true;
+}
+
+SwapChain* GraphicsEngine::createSwapChain()
+{
+    return new SwapChain();
 }
 
 GraphicsEngine* GraphicsEngine::get()
 {
     static GraphicsEngine engine;
     return &engine;
+}
+GraphicsEngine::~GraphicsEngine()
+{
 }

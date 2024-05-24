@@ -4,16 +4,19 @@
 class Window
 {
 public:
-	Window();
-	~Window();
+	Window() {};
+	~Window() {};
 	bool init();
 	bool release();
 	bool broadcast();
 	bool isRun();
+
+	RECT getClientWindowRect();
+	void setHWND(HWND hwnd);
 	virtual void onCreate() {};
 	virtual void onUpdate() {};
 	virtual void onDestroy();
-private:
+protected:
 	HWND m_hwnd;
 	bool m_isRun;
 };
