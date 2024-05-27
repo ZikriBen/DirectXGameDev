@@ -1,9 +1,5 @@
 #include "Window.h"
 
-//Window* window=nullptr;
-
-
-
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	//GetWindowLong(hwnd,)
@@ -41,8 +37,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 bool Window::init()
 {
-
-
 	//Setting up WNDCLASSEX object
 	WNDCLASSEX wc;
 	wc.cbClsExtra = NULL;
@@ -61,9 +55,6 @@ bool Window::init()
 	if (!::RegisterClassEx(&wc)) // If the registration of class will fail, the function will return false
 		return false;
 
-	/*if (!window)
-		window = this;*/
-
 		//Creation of the window
 	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application",
 		WS_CAPTION | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
@@ -77,13 +68,8 @@ bool Window::init()
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
-
-
-
 	//set this flag to true to indicate that the window is initialized and running
-	m_isRun = true;
-
-
+	m_is_run = true;
 
 	return true;
 }
@@ -91,7 +77,6 @@ bool Window::init()
 bool Window::broadcast()
 {
 	MSG msg;
-
 	this->onUpdate();
 
 	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
@@ -117,7 +102,7 @@ bool Window::release()
 
 bool Window::isRun()
 {
-	return m_isRun;
+	return m_is_run;
 }
 
 RECT Window::getClientWindowRect()
@@ -132,7 +117,15 @@ void Window::setHWND(HWND hwnd)
 	this->m_hwnd = hwnd;
 }
 
+void Window::onCreate()
+{
+}
+
+void Window::onUpdate()
+{
+}
+
 void Window::onDestroy()
 {
-	m_isRun = false;
+	m_is_run = false;
 }
