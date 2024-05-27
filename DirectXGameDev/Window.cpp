@@ -1,5 +1,8 @@
 #include "Window.h"
-#include <iostream>
+
+//Window* window=nullptr;
+
+
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -21,12 +24,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_DESTROY:
 	{
 		// Event fired when the window is destroyed
-		Window* window = (Window*)GetWindowLong(hwnd, GWLP_USERDATA);
-
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		window->onDestroy();
 		::PostQuitMessage(0);
 		break;
 	}
+
 
 	default:
 		return ::DefWindowProc(hwnd, msg, wparam, lparam);
@@ -38,6 +41,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 bool Window::init()
 {
+
+
 	//Setting up WNDCLASSEX object
 	WNDCLASSEX wc;
 	wc.cbClsExtra = NULL;
@@ -56,8 +61,12 @@ bool Window::init()
 	if (!::RegisterClassEx(&wc)) // If the registration of class will fail, the function will return false
 		return false;
 
+	/*if (!window)
+		window = this;*/
+
+		//Creation of the window
 	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application",
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
+		WS_CAPTION | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
 		NULL, NULL, NULL, this);
 
 	//if the creation fail return false
@@ -68,8 +77,13 @@ bool Window::init()
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
+
+
+
 	//set this flag to true to indicate that the window is initialized and running
 	m_isRun = true;
+
+
 
 	return true;
 }

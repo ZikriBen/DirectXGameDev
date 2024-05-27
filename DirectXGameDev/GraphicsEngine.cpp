@@ -6,7 +6,6 @@ GraphicsEngine::GraphicsEngine()
 }
 
 
-
 bool GraphicsEngine::init()
 {
     D3D_DRIVER_TYPE driverTypes[] = {
@@ -21,6 +20,8 @@ bool GraphicsEngine::init()
     };
     UINT numFeatureLevels = ARRAYSIZE(featureLevels);
     HRESULT res = 0;
+
+    ID3D11DeviceContext* m_immContext;
     
     for (UINT driverType_index = 0; driverType_index < numDriverType;) {
 
@@ -35,6 +36,8 @@ bool GraphicsEngine::init()
         return false;
     }
 
+    m_deviceContext = new DeviceContext(m_immContext);
+
     m_d3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&m_dxgiDevice);
     m_dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgiAdapter);
     m_dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgiFactory);
@@ -47,7 +50,7 @@ bool GraphicsEngine::release()
     m_d3dDevice->Release();
     m_dxgiAdapter->Release();
     m_dxgiFactory->Release();
-    m_immContext->Release();
+    m_deviceContext->Release();
     delete this;
     return true;
 }
@@ -61,6 +64,10 @@ GraphicsEngine* GraphicsEngine::get()
 {
     static GraphicsEngine engine;
     return &engine;
+}
+DeviceContext* GraphicsEngine::getImmediateDeviceContext()
+{
+    return this->m_deviceContext;
 }
 GraphicsEngine::~GraphicsEngine()
 {
